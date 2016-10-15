@@ -7,11 +7,13 @@ app = flask.Flask(__name__)
 def hello():
     return "OK"
 
-@app.route("/emotion")
+@app.route("/emotion", methods=['POST'])
 def emotion():
-    result = algo.get_final_info(flask.request.data['x_min'], flask.request.data['x_max'],
-    flask.request.data['y_min'], flask.request.data['y_max'], flask.request.data['current_ts'],
-    flask.request.data['delta_t'], flask.request.data['tags_considered'])
+    content = flask.request.get_json(silent=True)
+    print(content)
+    result = algo.get_final_info(content['x_min'], content['x_max'],
+    content['y_min'], content['y_max'], content['current_ts'],
+    content['delta_t'], content['tags_considered'])
     print(result)
     return flask.jsonify(result)
 
