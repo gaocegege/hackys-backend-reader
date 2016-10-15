@@ -1,4 +1,5 @@
 import sys
+import DB_Util
 from pointdb import PointDB
 
 STEP_CNT = 1000
@@ -22,8 +23,9 @@ def calculate_distance(x1, x2, x_step, y1, y2, y_step):
 
 
 def get_final_info(x_min, x_max, y_min, y_max, current_ts, delta_t, tags_considered):
-    conn = PointDB()
-    raw_info, used_tags = conn.selectPoints(x_min, x_max, y_min, y_max, current_ts, delta_t)
+    raw_info, used_tags = DB_Util.get_data_inbound(x_min, x_max, y_min, y_max, current_ts, delta_t)
+    # conn = PointDB()
+    # raw_info, used_tags = conn.selectPoints(x_min, x_max, y_min, y_max, current_ts, delta_t)
 
     x_len = x_max - x_min
     x_step = x_len / STEP_CNT
@@ -163,20 +165,25 @@ def get_final_info(x_min, x_max, y_min, y_max, current_ts, delta_t, tags_conside
         tag = c_tag[0]
         i = int(c_tag[1])
         if tag in remove_dict:
-            remove_dict[tag].append(i)
+            remove_dict[tag].add(i)
         else:
-            remove_dict[tag] = [i]
+            remove_dict[tag] = set()
     for item in remove_dict.items():
         tag = item[0]
-        tmp_list = item[1]
+        tmp_list = list(item[1])
         tmp_list.sort(reverse=True)
         for i in tmp_list:
             tag2final[tag].pop(i)
 
-    return tag2final
+    return tag2final, raw_info[0]
 
 
 def get_all_tags():
     conn = PointDB()
     return conn.tagidToTag()
 
+'''
+if __name__ == "__main__":
+    final_info = get_final_info(121.0, 122.0, 31.0, 32.0, 1476539590, 86400, ["1", "2", "3"])
+    print final_info
+'''
