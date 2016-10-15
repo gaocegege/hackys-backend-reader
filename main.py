@@ -1,9 +1,7 @@
 import flask
-import pointdb
+import algo
 
 app = flask.Flask(__name__)
-
-pointDB = pointdb.PointDB()
 
 @app.route("/")
 def hello():
@@ -11,12 +9,15 @@ def hello():
 
 @app.route("/emotion")
 def emotion():
-    print(flask.request.data)
-    return flask.jsonify({"gaoce": "1"})
+    result = algo.get_final_info(flask.request.data['x_min'], flask.request.data['x_max'],
+    flask.request.data['y_min'], flask.request.data['y_max'], flask.request.data['current_ts'],
+    flask.request.data['delta_t'], flask.request.data['tags_considered'])
+    print(result)
+    return flask.jsonify(result)
 
 @app.route("/tags")
 def tags():
-    result = pointDB.tagidToTag()
+    result = algo.get_all_tags()
     return flask.jsonify(result)
 
 @app.after_request
@@ -27,4 +28,4 @@ def after_request(response):
     return response
 
 if __name__ == "__main__":
-    app.run(port=8089)
+    app.run(port=8089, host="0.0.0.0")
