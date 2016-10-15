@@ -1,6 +1,9 @@
 import flask
+import pointdb
 
 app = flask.Flask(__name__)
+
+pointDB = pointdb.PointDB()
 
 @app.route("/")
 def hello():
@@ -13,7 +16,8 @@ def emotion():
 
 @app.route("/tags")
 def tags():
-    return flask.jsonify({"gaoce": "1"})
+    result = pointDB.tagidToTag()
+    return flask.jsonify(result)
 
 @app.after_request
 def after_request(response):
