@@ -1,4 +1,6 @@
-from generate_data import MOOD_FN, TAG_FN, SEPARATOR
+MOOD_FN = "beiling.data"
+TAG_FN = "tag.data"
+SEPARATOR = " "
 
 
 def get_tag_map():

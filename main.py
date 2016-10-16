@@ -10,7 +10,7 @@ def hello():
 @app.route("/emotion", methods=['POST'])
 def emotion():
     content = flask.request.get_json(silent=True)
-    print(content)
+    app.logger.info("ceshi ", content)
     result = algo.get_final_info(content['x_min'], content['x_max'],
     content['y_min'], content['y_max'], content['current_ts'],
     content['delta_t'], content['tags_considered'])
